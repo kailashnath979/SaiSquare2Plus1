@@ -305,6 +305,7 @@
 }
 
 /* --- Predictions --- */
+/* --- Predictions (accordion) --- */
 .predict{ padding: 16px 18px 18px; }
 .predict-head{
   display:flex;
@@ -312,22 +313,67 @@
   justify-content:space-between;
   gap:10px;
 }
-.pred-list{ display:flex; flex-direction:column; gap: 14px; margin-top: 10px; }
-.pred{
-  padding: 12px;
+
+.pred-accordion{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.pred-item{
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,.10);
   background: rgba(0,0,0,.18);
+  overflow:hidden;
 }
+
+.pred-head{
+  width:100%;
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items:center;
+  padding: 12px 12px;
+  cursor:pointer;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align:left;
+}
+
 .pred-title{
   font-weight: 900;
-  margin-bottom: 10px;
 }
+
+.pred-chevron{
+  font-weight: 900;
+  opacity: .8;
+  transform: rotate(0deg);
+  transition: transform 180ms ease;
+}
+
+.pred-item.open .pred-chevron{
+  transform: rotate(90deg);
+}
+
+.pred-body{
+  display:none;
+  padding: 0 12px 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.pred-item.open .pred-body{
+  display:block;
+}
+
 .pred-options{
   display:flex;
   flex-wrap:wrap;
   gap: 8px;
+  padding-top: 12px;
 }
+
 .pred-btn{
   padding: 10px 12px;
   border-radius: 14px;
@@ -338,7 +384,14 @@
   cursor:pointer;
 }
 .pred-btn:hover{ background: rgba(255,255,255,.10); }
-.pred-bars{ display:flex; flex-direction:column; gap:8px; margin-top: 12px; }
+
+.pred-bars{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top: 12px;
+}
+
 .bar{
   display:grid;
   grid-template-columns: 120px 1fr 40px;
@@ -346,6 +399,7 @@
   align-items:center;
   font-size: 13px;
 }
+
 .track{
   height: 10px;
   border-radius: 999px;
@@ -359,11 +413,11 @@
   background: linear-gradient(135deg, #ff8ad4, #7aa2ff);
 }
 
-/* Laptop: keep controls from cramping */
+/* Laptop: keep labels from cramping */
 @media (max-width: 1200px){
-  .spec-row{ grid-template-columns: 100px 1fr; }
   .bar{ grid-template-columns: 100px 1fr 40px; }
 }
+
 
 
 
