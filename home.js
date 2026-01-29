@@ -1,7 +1,7 @@
 /************************************************************
  * EDIT THESE TWO VALUES ONLY
  ************************************************************/
-const GENDER = "REPLACE_ME";      // set to "BOY" or "GIRL"
+const GENDER = "Ahaan... Antha easy ga chepthama";      // set to "BOY" or "GIRL"
 const MEET_DATE = "20140602";     // <-- set their meet date in YYYYMMDD
 
 /************************************************************
