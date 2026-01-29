@@ -53,70 +53,153 @@
 
     <!-- Fun interactive cards row -->
     <div class="grid section">
-      <div class="card timeline">
-        <h2>Timeline</h2>
-        <div class="titem">
-          <div class="tdate">201X</div>
-          <div class="ttext">Met / first hello / first “wait you code too?” moment.</div>
-        </div>
-        <div class="titem">
-          <div class="tdate">201X</div>
-          <div class="ttext">First trip / first big memory together.</div>
-        </div>
-        <div class="titem">
-          <div class="tdate">202X</div>
-          <div class="ttext">Big milestone (moved in / engagement / wedding).</div>
-        </div>
-        <div class="titem">
-          <div class="tdate">Now</div>
-          <div class="ttext">Shipping the most important project yet 👶</div>
+
+  <!-- Baby Feature Spec -->
+  <div class="card baby">
+    <div class="baby-head">
+      <h2>🍼 Baby v1.0 — Feature Spec</h2>
+      <span class="badge">STATUS: IN STAGING</span>
+    </div>
+
+    <div class="baby-spec">
+      <div class="spec-row">
+        <div class="muted tiny">Owners</div>
+        <div class="mono">Mom & Dad (primary on-call)</div>
+      </div>
+
+      <div class="spec-row">
+        <div class="muted tiny">SLA</div>
+        <div class="mono">Best effort (love-backed)</div>
+      </div>
+
+      <div class="spec-row">
+        <div class="muted tiny">Dependencies</div>
+        <div class="chips">
+          <span class="chip">☕ Coffee</span>
+          <span class="chip">🧹 Cleaning</span>
+          <span class="chip">🧡 Love</span>
+          <span class="chip">🍼 Diapers</span>
         </div>
       </div>
 
-      <div class="card incident">
-        <h2>🚨 Incident Report</h2>
-        <p class="muted" style="margin:0;">
-          The “Reveal Secret” button is broken in production.<br/>
-          You are both senior engineers, so… good luck 😄
-        </p>
-        <pre>
-INCIDENT: GR-2026
-SEVERITY: P0 (emotional)
-SYMPTOM: Reveal button disabled
-LIKELY FIX: Inspect element → remove the "disabled" attribute
-NOTE: Try not to push directly to main 👀
-        </pre>
+      <button class="btn btn-ghost baby-toggle" data-target="#knownIssues">
+        ▸ Known Issues
+      </button>
+      <div id="knownIssues" class="accordion hidden">
+        <ul class="muted" style="margin:0; padding-left: 18px;">
+          <li>Random wake events (no stack trace provided)</li>
+          <li>Loud notifications (cannot be muted)</li>
+          <li>Frequent “reboots” required</li>
+          <li>Documentation: missing</li>
+        </ul>
       </div>
 
-      <!-- Team Boy vs Girl voting -->
-      <div class="card poll">
-        <h2>⚔️ Team Boy vs Team Girl</h2>
-        <p class="muted" style="margin:0 0 12px;">
-          Take your guess before the secret is revealed. Choose wisely.
-        </p>
+      <button class="btn btn-ghost baby-toggle" data-target="#roadmap">
+        ▸ Roadmap
+      </button>
+      <div id="roadmap" class="accordion hidden">
+        <ul class="muted" style="margin:0; padding-left: 18px;">
+          <li>Smile feature rollout (beta)</li>
+          <li>First word MVP</li>
+          <li>Walking GA (date TBD)</li>
+        </ul>
+      </div>
 
-        <div class="poll-actions">
-          <button class="btn btn-team" id="voteBoy">👦 Team Boy</button>
-          <button class="btn btn-team" id="voteGirl">👧 Team Girl</button>
+      <div class="baby-actions">
+        <button class="btn" id="runTests">▶ Run Tests</button>
+        <button class="btn btn-ghost" id="clearTests">Clear</button>
+      </div>
+
+      <pre id="testOutput" class="baby-console hidden"></pre>
+    </div>
+  </div>
+
+  <!-- Predictions Board -->
+  <div class="card predict">
+    <div class="predict-head">
+      <h2>🔮 Predictions Board</h2>
+      <button class="btn btn-ghost" id="resetPredictions">Reset votes</button>
+    </div>
+    <p class="muted" style="margin:0 0 12px;">
+      Everyone can vote on this device. (Local-only, no backend.)
+    </p>
+
+    <div class="pred-list">
+
+      <div class="pred" data-q="first_word">
+        <div class="pred-title">First word will be…</div>
+        <div class="pred-options">
+          <button class="pred-btn" data-o="mama">Mama</button>
+          <button class="pred-btn" data-o="dada">Dada</button>
+          <button class="pred-btn" data-o="coffee">Coffee 😭</button>
+          <button class="pred-btn" data-o="other">Other</button>
         </div>
+        <div class="pred-bars"></div>
+      </div>
 
-        <div class="poll-stats">
-          <div class="stat">
-            <div class="stat-label muted">Team Boy</div>
-            <div class="stat-value" id="boyCount">0</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label muted">Team Girl</div>
-            <div class="stat-value" id="girlCount">0</div>
-          </div>
+      <div class="pred" data-q="vibe">
+        <div class="pred-title">Baby’s vibe</div>
+        <div class="pred-options">
+          <button class="pred-btn" data-o="chill">Chill</button>
+          <button class="pred-btn" data-o="chaos">Chaos gremlin</button>
         </div>
+        <div class="pred-bars"></div>
+      </div>
 
-        <button class="btn btn-ghost" id="resetVotes" title="Resets votes on this device only">Reset votes</button>
-        <p class="muted tiny" style="margin:10px 0 0;">
-          (Votes are saved only on this device — no backend, no money, no drama.)
-        </p>
+      <div class="pred" data-q="spoiler">
+        <div class="pred-title">Who will spoil the baby more?</div>
+        <div class="pred-options">
+          <button class="pred-btn" data-o="mom">Mom</button>
+          <button class="pred-btn" data-o="dad">Dad</button>
+          <button class="pred-btn" data-o="both">Both</button>
+        </div>
+        <div class="pred-bars"></div>
+      </div>
+
+      <div class="pred" data-q="cleaning">
+        <div class="pred-title">Thursday deep clean survives?</div>
+        <div class="pred-options">
+          <button class="pred-btn" data-o="yes">Yes</button>
+          <button class="pred-btn" data-o="no">No</button>
+          <button class="pred-btn" data-o="diapers">Replaced by diapers</button>
+        </div>
+        <div class="pred-bars"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Keep poll -->
+  <div class="card poll">
+    <h2>⚔️ Team Boy vs Team Girl</h2>
+    <p class="muted" style="margin:0 0 12px;">
+      Take your guess before the secret is revealed. Choose wisely.
+    </p>
+
+    <div class="poll-actions">
+      <button class="btn btn-team" id="voteBoy">👦 Team Boy</button>
+      <button class="btn btn-team" id="voteGirl">👧 Team Girl</button>
+    </div>
+
+    <div class="poll-stats">
+      <div class="stat">
+        <div class="stat-label muted">Team Boy</div>
+        <div class="stat-value" id="boyCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label muted">Team Girl</div>
+        <div class="stat-value" id="girlCount">0</div>
       </div>
     </div>
+
+    <button class="btn btn-ghost" id="resetVotes" title="Resets votes on this device only">Reset votes</button>
+    <p class="muted tiny" style="margin:10px 0 0;">
+      (Votes are saved only on this device — no backend, no money, no drama.)
+    </p>
+  </div>
+
+</div>
+
 
     <!-- Reveal -->
     <div class="card reveal section">
