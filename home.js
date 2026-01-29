@@ -340,6 +340,48 @@ function startConfetti(ms=2000){
   }, ms);
 }
 
+/**********************
+ * Baby Spec interactivity
+ **********************/
+document.querySelectorAll(".baby-toggle").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const targetSel = btn.getAttribute("data-target");
+    const target = document.querySelector(targetSel);
+    const isHidden = target.classList.contains("hidden");
+    target.classList.toggle("hidden");
+    btn.textContent = (isHidden ? "▾ " : "▸ ") + btn.textContent.slice(2);
+  });
+});
+
+const runTestsBtn = document.getElementById("runTests");
+const clearTestsBtn = document.getElementById("clearTests");
+const testOutput = document.getElementById("testOutput");
+
+function randomPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+runTestsBtn?.addEventListener("click", () => {
+  const sleep = randomPick(["PASS ✅", "FLAKY ⚠️", "FAIL ❌"]);
+  const quiet = randomPick(["FAIL ❌", "FAIL ❌", "FAIL ❌", "UNKNOWN 🤷"]);
+  const love = "PASS ✅";
+  const coffee = randomPick(["PASS ✅", "PASS ✅", "CRITICAL ✅"]);
+
+  testOutput.classList.remove("hidden");
+  testOutput.textContent =
+`Running test suite: baby-v1.0
+
+✅ Love.................. ${love}
+☕ Coffee dependency..... ${coffee}
+😴 Sleep stability....... ${sleep}
+🏠 Quiet house........... ${quiet}
+
+Result: Ship it anyway.`;
+});
+
+clearTestsBtn?.addEventListener("click", () => {
+  testOutput.classList.add("hidden");
+  testOutput.textContent = "";
+});
+
 /************************************************************
  * Console hint (because of course)
  ************************************************************/
