@@ -385,6 +385,9 @@ clearTestsBtn?.addEventListener("click", () => {
 /**********************
  * Predictions Board (local-only)
  **********************/
+/**********************
+ * Predictions Board (local-only) + accordion
+ **********************/
 const resetPredBtn = document.getElementById("resetPredictions");
 
 function keyFor(q, o){ return `pred_${q}_${o}`; }
@@ -397,27 +400,32 @@ function setPredCount(q, o, val){
   localStorage.setItem(keyFor(q,o), String(val));
 }
 
-function resetPredictions(){
-  document.querySelectorAll(".pred").forEach(pred => {
-    const q = pred.getAttribute("data-q");
-    pred.querySelectorAll(".pred-btn").forEach(btn => {
-      const o = btn.getAttribute("data-o");
-      localStorage.removeItem(keyFor(q,o));
-    });
+function getTotalVotesForQuestion(predItem){
+  const q = predItem.getAttribute("data-q");
+  let total = 0;
+  predItem.querySelectorAll(".pred-btn").forEach(btn => {
+    const o = btn.getAttribute("data-o");
+    total += getPredCount(q, o);
   });
-  renderAllPredictions();
+  return total;
 }
 
-function renderPrediction(pred){
-  const q = pred.getAttribute("data-q");
-  const bars = pred.querySelector(".pred-bars");
-  const opts = Array.from(pred.querySelectorAll(".pred-btn")).map(btn => ({
+function renderPrediction(predItem){
+  const q = predItem.getAttribute("data-q");
+  const bars = predItem.querySelector(".pred-bars");
+  const meta = predItem.querySelector("[data-meta]");
+
+  const opts = Array.from(predItem.querySelectorAll(".pred-btn")).map(btn => ({
     o: btn.getAttribute("data-o"),
     label: btn.textContent.trim()
   }));
 
   const counts = opts.map(x => ({...x, c: getPredCount(q, x.o)}));
-  const total = counts.reduce((a,x)=>a+x.c,0) || 0;
+  const total = counts.reduce((a,x)=>a+x.c,0);
+
+  if(meta){
+    meta.textContent = `${total} vote${total === 1 ? "" : "s"}`;
+  }
 
   bars.innerHTML = "";
   counts.forEach(x => {
@@ -434,21 +442,54 @@ function renderPrediction(pred){
 }
 
 function renderAllPredictions(){
-  document.querySelectorAll(".pred").forEach(renderPrediction);
+  document.querySelectorAll(".pred-item").forEach(renderPrediction);
 }
 renderAllPredictions();
 
-document.querySelectorAll(".pred .pred-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const pred = btn.closest(".pred");
-    const q = pred.getAttribute("data-q");
+function resetPredictions(){
+  document.querySelectorAll(".pred-item").forEach(predItem => {
+    const q = predItem.getAttribute("data-q");
+    predItem.querySelectorAll(".pred-btn").forEach(btn => {
+      const o = btn.getAttribute("data-o");
+      localStorage.removeItem(keyFor(q,o));
+    });
+  });
+  renderAllPredictions();
+}
+resetPredBtn?.addEventListener("click", resetPredictions);
+
+/* Voting */
+document.querySelectorAll(".pred-item .pred-btn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const predItem = btn.closest(".pred-item");
+    const q = predItem.getAttribute("data-q");
     const o = btn.getAttribute("data-o");
+
     setPredCount(q, o, getPredCount(q, o) + 1);
-    renderPrediction(pred);
+    renderPrediction(predItem);
   });
 });
 
-resetPredBtn?.addEventListener("click", resetPredictions);
+/* Accordion behavior (only one open at a time) */
+document.querySelectorAll(".pred-item .pred-head").forEach(head => {
+  head.addEventListener("click", () => {
+    const item = head.closest(".pred-item");
+    const isOpen = item.classList.contains("open");
+
+    // close all
+    document.querySelectorAll(".pred-item.open").forEach(x => x.classList.remove("open"));
+
+    // open clicked if it was closed
+    if(!isOpen) item.classList.add("open");
+  });
+});
+
+/* Open first item by default (optional) */
+const firstPred = document.querySelector(".pred-item");
+if(firstPred) firstPred.classList.add("open");
 
 
 /************************************************************
