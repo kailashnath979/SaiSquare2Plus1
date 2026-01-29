@@ -116,18 +116,24 @@
 
   <!-- Predictions Board -->
   <div class="card predict">
-    <div class="predict-head">
-      <h2>🔮 Predictions Board</h2>
-      <button class="btn btn-ghost" id="resetPredictions">Reset votes</button>
-    </div>
-    <p class="muted" style="margin:0 0 12px;">
-      Everyone can vote on this device. (Local-only, no backend.)
-    </p>
+  <div class="predict-head">
+    <h2>🔮 Predictions Board</h2>
+    <button class="btn btn-ghost" id="resetPredictions">Reset votes</button>
+  </div>
+  <p class="muted" style="margin:0 0 12px;">
+    Everyone can vote on this device. (Local-only, no backend.)
+  </p>
 
-    <div class="pred-list">
+  <div class="pred-accordion">
 
-      <div class="pred" data-q="first_word">
-        <div class="pred-title">First word will be…</div>
+    <div class="pred-item" data-q="first_word">
+      <button class="pred-head" type="button">
+        <span class="pred-title">First word will be…</span>
+        <span class="pred-meta muted tiny" data-meta>0 votes</span>
+        <span class="pred-chevron">▸</span>
+      </button>
+
+      <div class="pred-body">
         <div class="pred-options">
           <button class="pred-btn" data-o="mama">Mama</button>
           <button class="pred-btn" data-o="dada">Dada</button>
@@ -136,18 +142,32 @@
         </div>
         <div class="pred-bars"></div>
       </div>
+    </div>
 
-      <div class="pred" data-q="vibe">
-        <div class="pred-title">Baby’s vibe</div>
+    <div class="pred-item" data-q="vibe">
+      <button class="pred-head" type="button">
+        <span class="pred-title">Baby’s vibe</span>
+        <span class="pred-meta muted tiny" data-meta>0 votes</span>
+        <span class="pred-chevron">▸</span>
+      </button>
+
+      <div class="pred-body">
         <div class="pred-options">
           <button class="pred-btn" data-o="chill">Chill</button>
           <button class="pred-btn" data-o="chaos">Chaos gremlin</button>
         </div>
         <div class="pred-bars"></div>
       </div>
+    </div>
 
-      <div class="pred" data-q="spoiler">
-        <div class="pred-title">Who will spoil the baby more?</div>
+    <div class="pred-item" data-q="spoiler">
+      <button class="pred-head" type="button">
+        <span class="pred-title">Who will spoil the baby more?</span>
+        <span class="pred-meta muted tiny" data-meta>0 votes</span>
+        <span class="pred-chevron">▸</span>
+      </button>
+
+      <div class="pred-body">
         <div class="pred-options">
           <button class="pred-btn" data-o="mom">Mom</button>
           <button class="pred-btn" data-o="dad">Dad</button>
@@ -155,9 +175,16 @@
         </div>
         <div class="pred-bars"></div>
       </div>
+    </div>
 
-      <div class="pred" data-q="cleaning">
-        <div class="pred-title">Thursday deep clean survives?</div>
+    <div class="pred-item" data-q="cleaning">
+      <button class="pred-head" type="button">
+        <span class="pred-title">Thursday deep clean survives?</span>
+        <span class="pred-meta muted tiny" data-meta>0 votes</span>
+        <span class="pred-chevron">▸</span>
+      </button>
+
+      <div class="pred-body">
         <div class="pred-options">
           <button class="pred-btn" data-o="yes">Yes</button>
           <button class="pred-btn" data-o="no">No</button>
@@ -165,9 +192,11 @@
         </div>
         <div class="pred-bars"></div>
       </div>
-
     </div>
+
   </div>
+</div>
+
 
   <!-- Keep poll -->
   <div class="card poll">
