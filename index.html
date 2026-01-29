@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="style.css">
+  <title>One Little Secret</title>
+  <style>
+    :root{
+      --bg:#0b0f19;
+      --card:#121a2a;
+      --text:#e9eefc;
+      --muted:#aab6da;
+      --accent:#7aa2ff;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 20% 0%, #15224a 0%, transparent 60%),
+                  radial-gradient(1000px 700px at 100% 20%, #2a1440 0%, transparent 55%),
+                  var(--bg);
+      overflow-x:hidden;
+    }
+    a{ color:var(--accent); }
+    .wrap{ max-width: 980px; margin:0 auto; padding: 28px 18px 80px; }
+    .hero{
+      display:grid; gap:18px;
+      grid-template-columns: 1.2fr .8fr;
+      align-items:stretch;
+      margin-top: 10px;
+    }
+    @media (max-width: 860px){ .hero{ grid-template-columns: 1fr; } }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero .cover{
+      position:relative;
+      min-height: 320px;
+      background: #111;
+    }
+    .cover img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter:saturate(1.05) contrast(1.05);
+    }
+    .cover .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(90deg, rgba(11,15,25,.70), rgba(11,15,25,.10));
+      display:flex; flex-direction:column; justify-content:flex-end;
+      padding: 18px;
+    }
+    h1{ margin:0 0 6px; font-size: 34px; letter-spacing:.2px; }
+    .sub{ margin:0; color:var(--muted); line-height:1.4; }
+    .content{ padding: 18px; }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(122,162,255,.14);
+      border: 1px solid rgba(122,162,255,.25);
+      color: #dbe6ff;
+      font-size: 13px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 12px;
+    }
+    .gallery img{
+      width:100%; height: 180px; object-fit:cover;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    @media (max-width: 860px){
+      .gallery{ grid-template-columns: 1fr 1fr; }
+      .gallery img{ height: 160px; }
+    }
+
+    .section{ margin-top: 18px; }
+    .section h2{ margin:0 0 10px; font-size: 20px; }
+    .muted{ color:var(--muted); }
+
+    .timeline{
+      padding: 16px 18px 18px;
+    }
+    .titem{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.12);
+    }
+    .titem:last-child{ border-bottom: none; }
+    .tdate{ color:#dbe6ff; opacity:.9; font-weight:600; }
+    .ttext{ color:var(--muted); line-height:1.4; }
+
+    .incident{
+      padding: 16px 18px 18px;
+      background: linear-gradient(180deg, rgba(255,120,120,.10), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,120,120,.22);
+    }
+    .incident pre{
+      margin: 10px 0 0;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 12px;
+      border-radius: 12px;
+      overflow:auto;
+      color: #f2f5ff;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .reveal{
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      align-items:flex-start;
+    }
+    .btn{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 14px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 700;
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease, opacity .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); }
+    .btn:active{ transform: translateY(0px); }
+    .btn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      filter: grayscale(.3);
+    }
+
+    /* Modal reveal */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      place-items:center;
+      background: rgba(0,0,0,.55);
+      padding: 20px;
+      z-index: 50;
+    }
+    .modal.show{ display:grid; }
+    .modal-card{
+      width:min(720px, 100%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .modal-top{
+      padding: 18px 18px 6px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px;
+    }
+    .x{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+    .reveal-stage{
+      padding: 10px 18px 22px;
+    }
+    .big{
+      font-size: 36px;
+      margin: 6px 0 6px;
+      letter-spacing:.2px;
+    }
+    .anim{
+      margin-top: 14px;
+      display:grid;
+      place-items:center;
+      padding: 18px 0 6px;
+    }
+    .cardflip{
+      width: 260px; height: 160px;
+      perspective: 900px;
+    }
+    .cardflip .inner{
+      width:100%; height:100%;
+      position:relative;
+      transform-style:preserve-3d;
+      transition: transform 900ms cubic-bezier(.2,.9,.2,1);
+    }
+    .cardflip.revealed .inner{ transform: rotateY(180deg); }
+    .face{
+      position:absolute; inset:0;
+      border-radius: 18px;
+      display:grid; place-items:center;
+      backface-visibility:hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.25);
+      text-align:center;
+      padding: 12px;
+    }
+    .front{
+      color: #dbe6ff;
+    }
+    .back{
+      transform: rotateY(180deg);
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    /* Confetti canvas */
+    #confetti{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index: 60;
+      display:none;
+    }
+    #confetti.show{ display:block; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="card cover">
+        <img src="images/cover.JPG" alt="Cover photo" />
+        <div class="overlay">
+          <h1>One Little Secret</h1>
+          <p class="sub">A tiny website. A big surprise. And one *very* suspicious button.</p>
+        </div>
+      </div>
+
+      <div class="card content">
+        <div class="pill">🧡 Made with love + mild chaos</div>
+        <div class="section" style="margin-top:14px;">
+          <h2>Short story</h2>
+          <p class="muted" style="margin:0;">
+            Replace this with 6–10 lines about them. Keep it sweet + funny.
+            Example: “Two engineers. One home. Many coffees. One weekly deep clean. And now… a new teammate joining soon.”
+          </p>
+        </div>
+        <div class="section">
+          <h2>Gallery</h2>
+          <p class="muted" style="margin:0 0 10px;">Drop your photos into <b>images/</b> and rename them.</p>
+          <div class="gallery card" style="box-shadow:none; border:none; background:none; padding:0;">
+            <img src="images/1.JPG" alt="pic 1" />
+            <img src="images/2.JPG" alt="pic 2" />
+            <img src="images/3.JPG" alt="pic 3" />
+            <img src="images/4.JPG" alt="pic 4" />
+          </div>
+        </div>
+        <div class="card section video-card">
+  <h2>🎥 A little message</h2>
+  <p class="muted" style="margin:0 0 12px;">
+    Press play when you're ready 😄
+  </p>
+
+  <div class="video-embed">
+    <iframe
+      src="https://www.youtube.com/embed/mzi4ZzQo3aY"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+      </div>
+    </div>
+
+    <div class="grid section">
+      <div class="card timeline">
+        <h2>Timeline</h2>
+        <div class="titem">
+          <div class="tdate">201X</div>
+          <div class="ttext">Met / first hello / first “wait you code too?” moment.</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">201X</div>
+          <div class="ttext">First trip / first big memory together.</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">202X</div>
+          <div class="ttext">Big milestone (moved in / engagement / wedding).</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">Now</div>
+          <div class="ttext">Shipping the most important project yet 👶</div>
+        </div>
+      </div>
+
+      <div class="card incident">
+        <h2>🚨 Incident Report</h2>
+        <p class="muted" style="margin:0;">
+          The “Reveal Secret” button is broken in production.<br/>
+          You are both senior engineers, so… good luck 😄
+        </p>
+        <pre>
+INCIDENT: GR-2026
+SEVERITY: P0 (emotional)
+SYMPTOM: Reveal button IS disabled
+LIKELY FIX: Inspect element → remove the "disabled" attribute
+NOTE: Try not to push directly to main 👀
+        </pre>
+      </div>
+    </div>
+
+    <div class="card reveal section">
+      <h2>Final step</h2>
+      <p class="muted" style="margin:0;">
+        Click the button to reveal the secret.<br/>
+        (If it’s disabled… well… you know what to do.)
+      </p>
+
+      <!-- The whole point: they fix this via Inspect Element (remove disabled) -->
+      <button id="revealBtn" class="btn" disabled>🔒 Click to Reveal the Secret</button>
+
+      <p class="muted" style="margin:0; font-size:13px;">
+        Tip: If you’re stuck, open DevTools. This is a frontend bug 😌
+      </p>
+    </div>
+  </div>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Reveal">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <div class="muted" style="font-size:13px;">Decrypting…</div>
+          <div style="font-weight:800;">Secret payload unlocked ✅</div>
+        </div>
+        <button class="x" id="closeModal">Close</button>
+      </div>
+
+      <div class="reveal-stage">
+        <div class="big">It’s a…</div>
+        <div class="muted">Okay, deep breath. Ready?</div>
+
+        <div class="anim">
+          <div id="flip" class="cardflip">
+            <div class="inner">
+              <div class="face front">
+                <div style="font-weight:900; font-size:18px;">Click “Reveal”</div>
+                <div class="muted" style="font-size:13px; margin-top:6px;">to flip the card</div>
+              </div>
+              <div class="face back" id="genderText">REPLACE_ME</div>
+            </div>
+          </div>
+
+          <button class="btn" id="finalReveal" style="margin-top:14px;">🎉 Reveal</button>
+          <div class="muted" style="font-size:13px; margin-top:10px;">
+            (Yes, you earned this.)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /************************************************************
+     * YOU ONLY NEED TO EDIT THIS:
+     * Set GENDER to "BOY" or "GIRL" (or any text you want).
+     ************************************************************/
+    const GENDER = "REPLACE_ME"; // <-- change to "BOY" or "GIRL" before you share the site
+
+    // Open modal when the button is clicked (it will only be clickable after they remove disabled)
+    const revealBtn = document.getElementById("revealBtn");
+    const modal = document.getElementById("modal");
+    const closeModal = document.getElementById("closeModal");
+    const finalReveal = document.getElementById("finalReveal");
+    const flip = document.getElementById("flip");
+    const genderText = document.getElementById("genderText");
+
+    genderText.textContent = GENDER;
+
+    function openModal(){
+      modal.classList.add("show");
+      flip.classList.remove("revealed");
+    }
+    function hideModal(){
+      modal.classList.remove("show");
+    }
+
+    revealBtn.addEventListener("click", () => {
+      openModal();
+    });
+
+    closeModal.addEventListener("click", hideModal);
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) hideModal();
+    });
+
+    finalReveal.addEventListener("click", () => {
+      // Flip animation + confetti
+      flip.classList.add("revealed");
+      startConfetti(2200);
+    });
+
+    // Lightweight confetti (no libraries)
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let confettiPieces = [];
+    let confettiRunning = false;
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function makeConfetti(n=160){
+      const pieces = [];
+      for(let i=0;i<n;i++){
+        pieces.push({
+          x: Math.random()*canvas.width,
+          y: -20 - Math.random()*canvas.height*0.3,
+          r: 4 + Math.random()*6,
+          vy: 2 + Math.random()*5,
+          vx: -2 + Math.random()*4,
+          rot: Math.random()*Math.PI,
+          vr: -0.15 + Math.random()*0.3,
+          alpha: 0.9
+        });
+      }
+      return pieces;
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(const p of confettiPieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+
+        // bounce-ish drift
+        if(p.x < -50) p.x = canvas.width + 50;
+        if(p.x > canvas.width + 50) p.x = -50;
+
+        // fade out slowly
+        p.alpha *= 0.995;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+
+        // no fixed colors: use random HSL each frame? (too flashy)
+        // We'll do stable random-ish grayscale-ish sparkle using alpha + rotation:
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+
+        ctx.restore();
+      }
+      confettiPieces = confettiPieces.filter(p => p.y < canvas.height + 60 && p.alpha > 0.05);
+      if(confettiRunning) requestAnimationFrame(drawConfetti);
+    }
+
+    function startConfetti(ms=2000){
+      canvas.classList.add("show");
+      confettiPieces = confettiPieces.concat(makeConfetti(180));
+      if(!confettiRunning){
+        confettiRunning = true;
+        drawConfetti();
+      }
+      setTimeout(() => {
+        canvas.classList.remove("show");
+        confettiRunning = false;
+        confettiPieces = [];
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }, ms);
+    }
+
+    // Small “dev hint” in console (optional but funny)
+    console.log("GR-2026 hint: If a button is disabled, maybe check its HTML attributes 👀");
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

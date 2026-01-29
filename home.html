@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>One Little Secret — v2</title>
+
+  <!-- Your existing styles -->
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- New v2 styles -->
+  <link rel="stylesheet" href="./home.css">
+</head>
+
+<body>
+  <canvas id="confetti"></canvas>
+
+  <div class="wrap">
+
+    <!-- HERO: cover slideshow + typewriter -->
+    <div class="hero">
+      <div class="card cover cover-v2">
+        <img id="coverImg" src="images/cover.JPG" alt="Cover slideshow" />
+        <div class="overlay">
+          <h1>One Little Secret</h1>
+          <p class="sub">
+            <span id="typewriter"></span><span class="cursor">▍</span>
+          </p>
+          <div class="hero-actions">
+            <span class="pill">🧡 Made with love + mild chaos</span>
+            <button class="btn btn-ghost" id="pauseSlideshow">Pause Slideshow</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card content">
+        <div class="section" style="margin-top:0;">
+          <h2>Short story</h2>
+          <p class="muted" style="margin:0;">
+            “Two engineers. One home. Many coffees. One weekly deep clean. And now… a new teammate joining soon.”
+          </p>
+        </div>
+
+        <!-- Video stays (gallery removed) -->
+        <div class="section">
+          <h2>🎥 A little message</h2>
+          <p class="muted" style="margin:0 0 12px;">Press play when you’re ready 😄</p>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/mzi4ZzQo3aY"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fun interactive cards row -->
+    <div class="grid section">
+      <div class="card timeline">
+        <h2>Timeline</h2>
+        <div class="titem">
+          <div class="tdate">201X</div>
+          <div class="ttext">Met / first hello / first “wait you code too?” moment.</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">201X</div>
+          <div class="ttext">First trip / first big memory together.</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">202X</div>
+          <div class="ttext">Big milestone (moved in / engagement / wedding).</div>
+        </div>
+        <div class="titem">
+          <div class="tdate">Now</div>
+          <div class="ttext">Shipping the most important project yet 👶</div>
+        </div>
+      </div>
+
+      <div class="card incident">
+        <h2>🚨 Incident Report</h2>
+        <p class="muted" style="margin:0;">
+          The “Reveal Secret” button is broken in production.<br/>
+          You are both senior engineers, so… good luck 😄
+        </p>
+        <pre>
+INCIDENT: GR-2026
+SEVERITY: P0 (emotional)
+SYMPTOM: Reveal button disabled
+LIKELY FIX: Inspect element → remove the "disabled" attribute
+NOTE: Try not to push directly to main 👀
+        </pre>
+      </div>
+
+      <!-- Team Boy vs Girl voting -->
+      <div class="card poll">
+        <h2>⚔️ Team Boy vs Team Girl</h2>
+        <p class="muted" style="margin:0 0 12px;">
+          Take your guess before the secret is revealed. Choose wisely.
+        </p>
+
+        <div class="poll-actions">
+          <button class="btn btn-team" id="voteBoy">👦 Team Boy</button>
+          <button class="btn btn-team" id="voteGirl">👧 Team Girl</button>
+        </div>
+
+        <div class="poll-stats">
+          <div class="stat">
+            <div class="stat-label muted">Team Boy</div>
+            <div class="stat-value" id="boyCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label muted">Team Girl</div>
+            <div class="stat-value" id="girlCount">0</div>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost" id="resetVotes" title="Resets votes on this device only">Reset votes</button>
+        <p class="muted tiny" style="margin:10px 0 0;">
+          (Votes are saved only on this device — no backend, no money, no drama.)
+        </p>
+      </div>
+    </div>
+
+    <!-- Reveal -->
+    <div class="card reveal section">
+      <h2>Final step</h2>
+      <p class="muted" style="margin:0;">
+        Click the button to reveal the secret.<br/>
+        (If it’s disabled… well… you know what to do.)
+      </p>
+
+      <!-- They enable via Inspect Element -->
+      <button id="revealBtn" class="btn" disabled>🔒 Click to Reveal the Secret</button>
+
+      <p class="muted tiny" style="margin:0;">
+        Tip: If you’re stuck, open DevTools. This is a frontend bug 😌
+      </p>
+    </div>
+  </div>
+
+  <!-- Modal: slider challenge -> countdown -> reveal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Reveal">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <div class="muted tiny">Decrypting…</div>
+          <div style="font-weight:900;">Access requires one more step ✅</div>
+        </div>
+        <button class="x" id="closeModal">Close</button>
+      </div>
+
+      <div class="reveal-stage">
+
+        <!-- STEP 1: Slider challenge -->
+        <div id="stepSlider">
+          <div class="big">Prove you know your origin story 😈</div>
+          <p class="muted" style="margin:0 0 14px;">
+            Slide to the <b>exact date you met</b> (format: <b>YYYYMMDD</b>).<br/>
+            Yes, the slider range is ridiculous. That’s the joke.
+          </p>
+
+          <div class="slider-wrap">
+            <div class="slider-row">
+              <input id="dateSlider" type="range" min="0" max="99999999" step="1" value="0" />
+            </div>
+
+            <div class="slider-meta">
+              <div class="muted tiny">Current</div>
+              <div class="mono" id="sliderValue">00000000</div>
+              <div class="muted tiny">Attempts left</div>
+              <div class="mono" id="attemptsLeft">3</div>
+            </div>
+
+            <div class="slider-actions">
+              <button class="btn" id="submitDate">Submit</button>
+              <button class="btn btn-ghost" id="nudgeUp" title="Tiny nudge">+1</button>
+              <button class="btn btn-ghost" id="nudgeDown" title="Tiny nudge">-1</button>
+            </div>
+
+            <!-- Engineer override appears after 2 failed attempts -->
+            <div id="overrideBox" class="override hidden">
+              <div style="font-weight:900;">Senior Engineer Override unlocked 🧑‍💻</div>
+              <p class="muted" style="margin:6px 0 10px;">
+                Fine. Here’s a faster way. Type the date like a civilized person:
+              </p>
+              <input id="dateInput" class="text-input" placeholder="YYYYMMDD (e.g., 20190623)" />
+              <div class="muted tiny" style="margin-top:8px;">
+                (Or… you know… set the slider value via DevTools like the gremlins you are.)
+              </div>
+            </div>
+
+            <p class="muted tiny" id="feedback" style="margin:12px 0 0;"></p>
+          </div>
+        </div>
+
+        <!-- STEP 2: Countdown -->
+        <div id="stepCountdown" class="hidden">
+          <div class="big">Okay okay… initiating reveal</div>
+          <p class="muted" style="margin:0 0 12px;">No backing out now.</p>
+          <div class="countdown" id="countdownNum">3</div>
+        </div>
+
+        <!-- STEP 3: Reveal -->
+        <div id="stepReveal" class="hidden">
+          <div class="big">It’s a…</div>
+          <div class="muted">Deep breath. Ready?</div>
+
+          <div class="anim">
+            <div id="flip" class="cardflip">
+              <div class="inner">
+                <div class="face front">
+                  <div style="font-weight:900; font-size:18px;">Click “Reveal”</div>
+                  <div class="muted tiny" style="margin-top:6px;">to flip the card</div>
+                </div>
+                <div class="face back" id="genderText">REPLACE_ME</div>
+              </div>
+            </div>
+
+            <button class="btn" id="finalReveal" style="margin-top:14px;">🎉 Reveal</button>
+            <div class="muted tiny" style="margin-top:10px;">(Yes, you earned this.)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- New v2 logic -->
+  <script src="./home.js"></script>
+</body>
+</html>
