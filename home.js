@@ -382,6 +382,75 @@ clearTestsBtn?.addEventListener("click", () => {
   testOutput.textContent = "";
 });
 
+/**********************
+ * Predictions Board (local-only)
+ **********************/
+const resetPredBtn = document.getElementById("resetPredictions");
+
+function keyFor(q, o){ return `pred_${q}_${o}`; }
+
+function getPredCount(q, o){
+  return parseInt(localStorage.getItem(keyFor(q,o)) || "0", 10);
+}
+
+function setPredCount(q, o, val){
+  localStorage.setItem(keyFor(q,o), String(val));
+}
+
+function resetPredictions(){
+  document.querySelectorAll(".pred").forEach(pred => {
+    const q = pred.getAttribute("data-q");
+    pred.querySelectorAll(".pred-btn").forEach(btn => {
+      const o = btn.getAttribute("data-o");
+      localStorage.removeItem(keyFor(q,o));
+    });
+  });
+  renderAllPredictions();
+}
+
+function renderPrediction(pred){
+  const q = pred.getAttribute("data-q");
+  const bars = pred.querySelector(".pred-bars");
+  const opts = Array.from(pred.querySelectorAll(".pred-btn")).map(btn => ({
+    o: btn.getAttribute("data-o"),
+    label: btn.textContent.trim()
+  }));
+
+  const counts = opts.map(x => ({...x, c: getPredCount(q, x.o)}));
+  const total = counts.reduce((a,x)=>a+x.c,0) || 0;
+
+  bars.innerHTML = "";
+  counts.forEach(x => {
+    const pct = total === 0 ? 0 : Math.round((x.c/total)*100);
+    const row = document.createElement("div");
+    row.className = "bar";
+    row.innerHTML = `
+      <div class="muted">${x.label}</div>
+      <div class="track"><div class="fill" style="width:${pct}%;"></div></div>
+      <div class="mono">${x.c}</div>
+    `;
+    bars.appendChild(row);
+  });
+}
+
+function renderAllPredictions(){
+  document.querySelectorAll(".pred").forEach(renderPrediction);
+}
+renderAllPredictions();
+
+document.querySelectorAll(".pred .pred-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const pred = btn.closest(".pred");
+    const q = pred.getAttribute("data-q");
+    const o = btn.getAttribute("data-o");
+    setPredCount(q, o, getPredCount(q, o) + 1);
+    renderPrediction(pred);
+  });
+});
+
+resetPredBtn?.addEventListener("click", resetPredictions);
+
+
 /************************************************************
  * Console hint (because of course)
  ************************************************************/
