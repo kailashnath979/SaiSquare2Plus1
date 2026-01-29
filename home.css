@@ -240,6 +240,13 @@
     grid-template-columns: 1fr !important;
   }
 }
+/* Fix the “orphan 3rd card” on mid-size screens:
+   When grid is 2 columns (860–1799px), make Poll span full width. */
+@media (min-width: 861px) and (max-width: 1799px){
+  .grid .card.poll{
+    grid-column: 1 / -1;
+  }
+}
 
 
 
