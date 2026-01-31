@@ -534,8 +534,8 @@ function pickWinner(questionKey, options){
 function pickTeam(){
   const boy = parseInt(localStorage.getItem("gr_boy") || "0", 10);
   const girl = parseInt(localStorage.getItem("gr_girl") || "0", 10);
-  if(boy === 0 && girl === 0) return ""; // not voted
-  return boy >= girl ? "Boy" : "Girl";   // must match Google option text exactly
+  if(boy === 0 && girl === 0) return "";
+  return boy >= girl ? "BOY" : "GIRL";   
 }
 
 async function submitToGoogleForm(){
