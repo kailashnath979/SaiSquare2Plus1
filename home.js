@@ -103,11 +103,17 @@ renderCounts();
 voteBoy?.addEventListener("click", () => {
   const c = getCounts();
   setCounts({ boy: c.boy + 1, girl: c.girl });
+
+  submitTeamToGoogle("BOY"); // ✅ one submission per click
 });
+
 voteGirl?.addEventListener("click", () => {
   const c = getCounts();
   setCounts({ boy: c.boy, girl: c.girl + 1 });
+
+  submitTeamToGoogle("GIRL"); // ✅ one submission per click
 });
+
 resetVotes?.addEventListener("click", () => {
   setCounts({ boy: 0, girl: 0 });
 });
@@ -570,6 +576,26 @@ submitBtn?.addEventListener("click", () => {
     submitStatus.textContent = "Submitted (or attempted). If unsure, submit again.";
   });
 });
+function submitTeamToGoogle(value){
+  const form = document.getElementById("googleVoteForm");
+  const input = document.getElementById("gf_team");
+  const status = document.getElementById("submitStatus"); // optional
+
+  if(!form || !input){
+    console.error("Google vote form not found.");
+    return;
+  }
+
+  input.value = value; // must match exactly: "BOY" or "GIRL"
+  if(status) status.textContent = `Submitting ${value}…`;
+
+  form.submit();
+
+  if(status){
+    setTimeout(() => status.textContent = `✅ Submitted ${value}`, 500);
+    setTimeout(() => status.textContent = "", 1400);
+  }
+}
 
 
 
