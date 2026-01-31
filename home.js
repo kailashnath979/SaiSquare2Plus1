@@ -613,18 +613,23 @@ async function refreshGlobalVotes(){
   const girlEl = document.getElementById("girlCount");
 
   if(status) status.textContent = "Refreshing global votes…";
+  const url = GLOBAL_TALLY_CSV_URL + (GLOBAL_TALLY_CSV_URL.includes("?") ? "&" : "?") + "cb=" + Date.now();
 
-  const res = await fetch(GLOBAL_TALLY_CSV_URL, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store" });
   if(!res.ok) throw new Error(`Failed to fetch totals CSV: ${res.status}`);
 
   const text = await res.text();
 
-  const lines = text.trim().split(/\r?\n/).slice(1); // skip header
+  // Robust-ish CSV parsing for simple TEAM,COUNT rows
+  const lines = text.trim().split(/\r?\n/);
+  if(lines.length < 2) throw new Error("Totals CSV has no data rows.");
+
   const map = {};
-  for(const line of lines){
-    const [teamRaw, countRaw] = line.split(",");
-    const team = (teamRaw || "").trim().toUpperCase();
-    const count = parseInt((countRaw || "0").trim(), 10) || 0;
+  for(const line of lines.slice(1)){
+    const parts = line.split(",");
+    if(parts.length < 2) continue;
+    const team = (parts[0] || "").replace(/(^"|"$)/g, "").trim().toUpperCase();
+    const count = parseInt((parts[1] || "0").replace(/(^"|"$)/g, "").trim(), 10) || 0;
     map[team] = count;
   }
 
