@@ -598,6 +598,49 @@ function submitTeamToGoogle(value){
 }
 
 
+const GLOBAL_TALLY_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeqroLJTWppQFWnrrm30dPWDgYGHZGrRsEXaESMspHrN_muoRMmqgWKJaffmTQ15W4e0udHRmI6fS1/pub?gid=1442516944&single=true&output=csv";
+
+async function refreshGlobalVotes(){
+  const status = document.getElementById("globalVoteStatus");
+  const boyEl = document.getElementById("boyCount");
+  const girlEl = document.getElementById("girlCount");
+
+  if(status) status.textContent = "Refreshing global votes…";
+
+  const res = await fetch(GLOBAL_TALLY_CSV_URL, { cache: "no-store" });
+  if(!res.ok) throw new Error(`Failed to fetch totals CSV: ${res.status}`);
+
+  const text = await res.text();
+
+  const lines = text.trim().split(/\r?\n/).slice(1); // skip header
+  const map = {};
+  for(const line of lines){
+    const [teamRaw, countRaw] = line.split(",");
+    const team = (teamRaw || "").trim().toUpperCase();
+    const count = parseInt((countRaw || "0").trim(), 10) || 0;
+    map[team] = count;
+  }
+
+  if(boyEl) boyEl.textContent = String(map["BOY"] ?? 0);
+  if(girlEl) girlEl.textContent = String(map["GIRL"] ?? 0);
+
+  if(status) status.textContent = "✅ Global votes updated";
+  setTimeout(() => { if(status) status.textContent = ""; }, 1500);
+}
+
+document.getElementById("refreshGlobalVotes")?.addEventListener("click", () => {
+  refreshGlobalVotes().catch(err => {
+    console.error(err);
+    const status = document.getElementById("globalVoteStatus");
+    if(status) status.textContent = "❌ Couldn’t refresh";
+  });
+});
+
+// Optional: auto-load global votes once on page open
+refreshGlobalVotes().catch(()=>{});
+
+
+
 
 /************************************************************
  * Console hint (because of course)
