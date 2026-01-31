@@ -256,31 +256,40 @@ dateInput?.addEventListener("keydown", (e) => {
 });
 
 function startCountdownThenReveal(){
-  stepSlider.classList.add("hidden");
-  stepCountdown.classList.remove("hidden");
+  const stepCountdown = document.getElementById("stepCountdown");
+  const stepReveal = document.getElementById("stepReveal");
+  const countdownNum = document.getElementById("countdownNum");
+  const iframe = document.getElementById("revealIframe");
 
-  let n = 3;
-  countdownNum.textContent = String(n);
+  // Show countdown step, hide reveal step
+  stepCountdown?.classList.remove("hidden");
+  stepReveal?.classList.add("hidden");
+
+  let t = 3;
+  if(countdownNum) countdownNum.textContent = String(t);
 
   const timer = setInterval(() => {
-    n -= 1;
-    countdownNum.textContent = String(n);
-    if(n <= 0){
-      clearInterval(timer);
-      stepCountdown.classList.add("hidden");
-      stepReveal.classList.remove("hidden");
-      startConfetti(1200);
-    }
-  }, 900);
-}
+    t -= 1;
+    if(countdownNum) countdownNum.textContent = String(t);
 
-/************************************************************
- * Reveal flip + confetti
- ************************************************************/
-finalReveal?.addEventListener("click", () => {
-  flip.classList.add("revealed");
-  startConfetti(2400);
-});
+    if(t <= 0){
+      clearInterval(timer);
+
+      // Hide countdown, show reveal
+      stepCountdown?.classList.add("hidden");
+      stepReveal?.classList.remove("hidden");
+
+      // Reload iframe so autoplay tries again after user interaction
+      if(iframe){
+        const base = "https://www.youtube.com/embed/mzi4ZzQo3aY";
+        iframe.src = base + "?autoplay=1&mute=1";
+      }
+
+      // Optional: confetti here
+      // launchConfetti();
+    }
+  }, 1000);
+}
 
 /************************************************************
  * Lightweight confetti (same canvas approach)
