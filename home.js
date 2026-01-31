@@ -595,7 +595,7 @@ function submitTeamToGoogle(value){
   input.value = value; // must match option text in form exactly
   if(status) status.textContent = `Submitting ${value}…`;
 
-  form.submit();
+  form.requestSubmit();
   console.log("✅ form.submit() called");
 
   setTimeout(() => {
