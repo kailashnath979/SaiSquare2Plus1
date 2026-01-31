@@ -576,26 +576,33 @@ submitBtn?.addEventListener("click", () => {
     submitStatus.textContent = "Submitted (or attempted). If unsure, submit again.";
   });
 });
+
+
 function submitTeamToGoogle(value){
   const form = document.getElementById("googleVoteForm");
   const input = document.getElementById("gf_team");
-  const status = document.getElementById("submitStatus"); // optional
+  const status = document.getElementById("submitStatus");
+
+  console.log("submitTeamToGoogle called with:", value);
+  console.log("form exists?", !!form, "input exists?", !!input);
 
   if(!form || !input){
-    console.error("Google vote form not found.");
+    console.error("❌ Missing googleVoteForm or gf_team in HTML");
+    if(status) status.textContent = "❌ Setup error: form missing";
     return;
   }
 
-  input.value = value; // must match exactly: "BOY" or "GIRL"
+  input.value = value; // must match option text in form exactly
   if(status) status.textContent = `Submitting ${value}…`;
 
   form.submit();
+  console.log("✅ form.submit() called");
 
-  if(status){
-    setTimeout(() => status.textContent = `✅ Submitted ${value}`, 500);
-    setTimeout(() => status.textContent = "", 1400);
-  }
+  setTimeout(() => {
+    if(status) status.textContent = `✅ Submitted ${value}`;
+  }, 700);
 }
+
 
 
 const GLOBAL_TALLY_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeqroLJTWppQFWnrrm30dPWDgYGHZGrRsEXaESMspHrN_muoRMmqgWKJaffmTQ15W4e0udHRmI6fS1/pub?gid=1442516944&single=true&output=csv";
