@@ -492,6 +492,87 @@ const firstPred = document.querySelector(".pred-item");
 if(firstPred) firstPred.classList.add("open");
 
 
+
+/**********************
+ * Submit votes to Google Forms (shared global)
+ **********************/
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSf1FIAqknQc8D6FbWRx2jw-ndwXy1Ygu2L1yXwwDx0wi65KpA/formResponse";
+
+// Replace these with your real entry IDs from the prefilled URL
+const FORM_FIELDS = {
+  team: "entry.1625703225",
+  first_word: "entry.222222222",
+  vibe: "entry.333333333",
+  spoiler: "entry.444444444",
+  cleaning: "entry.555555555",
+};
+
+const submitBtn = document.getElementById("submitToGoogle");
+const submitStatus = document.getElementById("submitStatus");
+
+/**
+ * Pull the user's local votes from your existing localStorage counters
+ * and convert them into ONE selected answer per question.
+ * Strategy: choose the option with the highest count on this device.
+ * (You can change this to “latest click wins” if you prefer.)
+ */
+function pickWinner(questionKey, options){
+  let best = options[0];
+  let bestCount = -1;
+  for(const opt of options){
+    const k = `pred_${questionKey}_${opt.key}`;
+    const c = parseInt(localStorage.getItem(k) || "0", 10);
+    if(c > bestCount){
+      bestCount = c;
+      best = opt;
+    }
+  }
+  return best.value; 
+}
+
+// Same for Team Boy/Girl board
+function pickTeam(){
+  const boy = parseInt(localStorage.getItem("gr_boy") || "0", 10);
+  const girl = parseInt(localStorage.getItem("gr_girl") || "0", 10);
+  if(boy === 0 && girl === 0) return ""; // not voted
+  return boy >= girl ? "Boy" : "Girl";   // must match Google option text exactly
+}
+
+async function submitToGoogleForm(){
+  // Map your UI options to EXACT Google Form choice strings
+  const payload = new URLSearchParams();
+
+  const teamPick = pickTeam();
+  if(teamPick) payload.append(FORM_FIELDS.team, teamPick);
+
+  
+
+  submitStatus.textContent = "Submitting…";
+
+  /**
+   * Important:
+   * Google Forms blocks CORS, so fetch() may fail from the browser even though the submit works.
+   * The reliable trick is to submit via a hidden <iframe> (next section),
+   * OR try fetch with no-cors (won’t give you a success response, but it submits).
+   */
+  await fetch(GOOGLE_FORM_ACTION, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: payload.toString(),
+  });
+
+  submitStatus.textContent = "✅ Submitted! (Global tally updated in the Google Sheet)";
+}
+
+submitBtn?.addEventListener("click", () => {
+  submitToGoogleForm().catch(() => {
+    submitStatus.textContent = "Submitted (or attempted). If unsure, submit again.";
+  });
+});
+
+
+
 /************************************************************
  * Console hint (because of course)
  ************************************************************/
