@@ -412,6 +412,8 @@
   width: 0%;
   background: linear-gradient(135deg, #ff8ad4, #7aa2ff);
 }
+#globalVoteStatus:empty{ display:none; }
+
 
 /* Laptop: keep labels from cramping */
 @media (max-width: 1200px){
