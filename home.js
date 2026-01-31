@@ -507,11 +507,11 @@ if(firstPred) firstPred.classList.add("open");
 /**********************
  * Submit votes to Google Forms (shared global)
  **********************/
-const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSf1FIAqknQc8D6FbWRx2jw-ndwXy1Ygu2L1yXwwDx0wi65KpA/formResponse";
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1YEm215yotUkkNjbrCnRtu5lMqBdU1svYN1BIEi1aX0Q/formResponse";
 
 // Replace these with your real entry IDs from the prefilled URL
 const FORM_FIELDS = {
-  team: "entry.1625703225",
+  team: "entry.526171431",
   first_word: "entry.222222222",
   vibe: "entry.333333333",
   spoiler: "entry.444444444",
