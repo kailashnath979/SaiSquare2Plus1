@@ -610,7 +610,7 @@ function submitTeamToGoogle(value){
 
 
 
-const GLOBAL_TALLY_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQeqroLJTWppQFWnrrm30dPWDgYGHZGrRsEXaESMspHrN_muoRMmqgWKJaffmTQ15W4e0udHRmI6fS1/pub?gid=1442516944&single=true&output=csv";
+const GLOBAL_TALLY_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS7rqCkriVOZWNog_R4hpYpL32Cmu9bdKPrpaX7kVsdhGKERGIsh2ML1ed_c3pr4vRQH_xYkOZAze2d/pub?gid=1373036357&single=true&output=csv";
 
 async function refreshGlobalVotes(){
   const status = document.getElementById("globalVoteStatus");
